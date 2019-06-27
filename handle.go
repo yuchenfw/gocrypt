@@ -56,15 +56,14 @@ func getHash(data string, hashType Hash) (hash crypto.Hash, hashed []byte, err e
 		newHash = md5.New()
 		hash = crypto.MD5
 	default:
-		return hash, hashed, fmt.Errorf("unsupport hashType")
+		err = fmt.Errorf("unsupport hashType")
+		return
 	}
-	_, err = newHash.Write([]byte(data))
-	if err != nil {
-		return hash, hashed, err
+	if _, err = newHash.Write([]byte(data)); err != nil {
+		return
 	}
-	newHash.Write([]byte(data))
 	hashed = newHash.Sum(nil)
-	return hash, hashed, nil
+	return
 }
 
 //decodeData decodes string data to bytes in designed encoded type
