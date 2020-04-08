@@ -1,7 +1,7 @@
 package rsa
 
 import (
-	"gocrypt"
+	"github.com/yuchenfw/gocrypt"
 	"testing"
 )
 

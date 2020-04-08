@@ -17,7 +17,8 @@ package aes
 import (
 	"crypto/aes"
 	"fmt"
-	"gocrypt"
+
+	"github.com/yuchenfw/gocrypt"
 )
 
 type aesCrypt struct {

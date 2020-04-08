@@ -19,7 +19,8 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"fmt"
-	"gocrypt"
+
+	"github.com/yuchenfw/gocrypt"
 )
 
 type rsaCrypt struct {

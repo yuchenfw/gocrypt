@@ -1,7 +1,7 @@
 package des
 
 import (
-	"gocrypt"
+	"github.com/yuchenfw/gocrypt"
 	"testing"
 )
 

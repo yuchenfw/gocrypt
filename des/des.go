@@ -17,7 +17,8 @@ package des
 import (
 	"crypto/des"
 	"fmt"
-	"gocrypt"
+
+	"github.com/yuchenfw/gocrypt"
 )
 
 type desCrypt struct {

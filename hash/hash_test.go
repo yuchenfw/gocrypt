@@ -1,7 +1,7 @@
 package hash
 
 import (
-	"gocrypt"
+	"github.com/yuchenfw/gocrypt"
 	"testing"
 )
 

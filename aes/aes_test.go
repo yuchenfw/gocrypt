@@ -1,7 +1,7 @@
 package aes
 
 import (
-	"gocrypt"
+	"github.com/yuchenfw/gocrypt"
 	"testing"
 )
 
