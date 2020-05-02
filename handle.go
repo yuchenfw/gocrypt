@@ -117,19 +117,22 @@ func EncodeToString(data []byte, encodeType Encode) (string, error) {
 	}
 }
 
-//UnPaddingPKCS7 un-padding src data to original data , adapt to PKCS5 &PKCS7
-func UnPaddingPKCS7(src []byte) []byte {
+// UnPaddingPKCS7 un-padding src data to original data , adapt to PKCS5 & PKCS7
+func UnPaddingPKCS7(src []byte, blockSize int) []byte {
 	n := len(src)
 	if n == 0 {
 		return src
 	}
 	paddingNum := int(src[n-1])
+	if n < paddingNum || paddingNum > blockSize {
+		return src
+	}
 	return src[:n-paddingNum]
 }
 
 //PKCS7Padding adds padding data using pkcs7 rules , adapt to PKCS5 &PKCS7
-func PKCS7Padding(cipherText []byte, blockSize int) []byte {
-	padding := blockSize - len(cipherText)%blockSize
-	padText := bytes.Repeat([]byte{byte(padding)}, padding)
-	return append(cipherText, padText...)
+func PKCS7Padding(src []byte, blockSize int) []byte {
+	paddingNum := blockSize - len(src)%blockSize
+	padding := bytes.Repeat([]byte{byte(paddingNum)}, paddingNum)
+	return append(src, padding...)
 }

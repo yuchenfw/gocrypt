@@ -63,6 +63,10 @@ func (cc *CipherCrypt) EncryptToString(encodeType Encode, src []byte, c Cipher, 
 //dst the decrypted bytes
 func (cc *CipherCrypt) Decrypt(src []byte, c Cipher, ivs ...[]byte) (dst []byte, err error) {
 	block := cc.Block
+	if len(src)%block.BlockSize() != 0 {
+		err = fmt.Errorf("input not full blocks")
+		return
+	}
 	switch c {
 	case CBC:
 		dst, err = cbcDecrypt(block, src, ivs...)
@@ -73,7 +77,10 @@ func (cc *CipherCrypt) Decrypt(src []byte, c Cipher, ivs ...[]byte) (dst []byte,
 	default:
 		dst, err = ecbDecrypt(block, src)
 	}
-	return UnPaddingPKCS7(dst), err
+	if err != nil {
+		return nil, err
+	}
+	return UnPaddingPKCS7(dst, block.BlockSize()), err
 }
 
 //DecryptToString decrypts src then encodes return data to string
