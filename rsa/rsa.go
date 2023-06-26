@@ -35,14 +35,14 @@ type RSASecret struct {
 	PrivateKeyType     gocrypt.Secret
 }
 
-// NewRSACrypt init with the RSA secret info
+//NewRSACrypt init with the RSA secret info
 func NewRSACrypt(secretInfo RSASecret) *rsaCrypt {
 	return &rsaCrypt{secretInfo: secretInfo}
 }
 
-// Encrypt encrypts the given message with public key
-// src the original data
-// outputDataType the encode type of encrypted data ,such as Base64,HEX
+//Encrypt encrypts the given message with public key
+//src the original data
+//outputDataType the encode type of encrypted data ,such as Base64,HEX
 func (rc *rsaCrypt) Encrypt(src string, outputDataType gocrypt.Encode) (dst string, err error) {
 	secretInfo := rc.secretInfo
 	if secretInfo.PublicKey == "" {
@@ -52,24 +52,21 @@ func (rc *rsaCrypt) Encrypt(src string, outputDataType gocrypt.Encode) (dst stri
 	if err != nil {
 		return
 	}
-	pubKey, err := x509.ParsePKCS1PublicKey(pubKeyDecoded)
-	if err != nil {
-		return "", err
-	}
+	pubKey, err := x509.ParsePKIXPublicKey(pubKeyDecoded)
 	if err != nil {
 		return
 	}
 	var dataEncrypted []byte
-	dataEncrypted, err = rsa.EncryptPKCS1v15(rand.Reader, pubKey, []byte(src))
+	dataEncrypted, err = rsa.EncryptPKCS1v15(rand.Reader, pubKey.(*rsa.PublicKey), []byte(src))
 	if err != nil {
 		return
 	}
 	return gocrypt.EncodeToString(dataEncrypted, outputDataType)
 }
 
-// Decrypt decrypts a plaintext using private key
-// src the encrypted data with public key
-// srcType the encode type of encrypted data ,such as Base64,HEX
+//Decrypt decrypts a plaintext using private key
+//src the encrypted data with public key
+//srcType the encode type of encrypted data ,such as Base64,HEX
 func (rc *rsaCrypt) Decrypt(src string, srcType gocrypt.Encode) (dst string, err error) {
 	secretInfo := rc.secretInfo
 	if secretInfo.PrivateKey == "" {
@@ -95,10 +92,10 @@ func (rc *rsaCrypt) Decrypt(src string, srcType gocrypt.Encode) (dst string, err
 	return string(dataDecrypted), nil
 }
 
-// Sign calculates the signature of input data with the hash type & private key
-// src the original unsigned data
-// hashType the type of hash ,such as MD5,SHA1...
-// outputDataType the encode type of sign data ,such as Base64,HEX
+//Sign calculates the signature of input data with the hash type & private key
+//src the original unsigned data
+//hashType the type of hash ,such as MD5,SHA1...
+//outputDataType the encode type of sign data ,such as Base64,HEX
 func (rc *rsaCrypt) Sign(src string, hashType gocrypt.Hash, outputDataType gocrypt.Encode) (dst string, err error) {
 	secretInfo := rc.secretInfo
 	if secretInfo.PrivateKey == "" {
@@ -123,11 +120,11 @@ func (rc *rsaCrypt) Sign(src string, hashType gocrypt.Hash, outputDataType gocry
 	return gocrypt.EncodeToString(signature, outputDataType)
 }
 
-// VerifySign verifies input data whether match the sign data with the public key
-// src the original unsigned data
-// signedData the data signed with private key
-// hashType the type of hash ,such as MD5,SHA1...
-// signDataType the encode type of sign data ,such as Base64,HEX
+//VerifySign verifies input data whether match the sign data with the public key
+//src the original unsigned data
+//signedData the data signed with private key
+//hashType the type of hash ,such as MD5,SHA1...
+//signDataType the encode type of sign data ,such as Base64,HEX
 func (rc *rsaCrypt) VerifySign(src string, hashType gocrypt.Hash, signedData string, signDataType gocrypt.Encode) (bool, error) {
 	secretInfo := rc.secretInfo
 	if secretInfo.PublicKey == "" {
